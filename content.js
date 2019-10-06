@@ -24,7 +24,7 @@ document.addEventListener("keypress", function(){
 			{
 				case "scroll up":
 					console.log("scroll up case");
-					window.scrollBy(0,-300);
+					window.scrollBy(0,-500);
 					  break;
 				case "scroll down":
 					  console.log("scroll down case");
