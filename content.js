@@ -3,7 +3,14 @@ var zoom=1;
 document.addEventListener("keypress", function(){
 	if (event.keyCode == 13) 
 	{
+		console.log("u hit enter");
+	g="Command please";
+	var sp = new SpeechSynthesisUtterance();
+	sp.rate = 1;
+	sp.pitch = 0.5;
+	sp.text = g;
 		console.log("you hit enter");
+		window.speechSynthesis.speak(sp);
 		var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
 		recognition.lang = 'en-US';
 		recognition.interimResults = false;
@@ -25,10 +32,14 @@ document.addEventListener("keypress", function(){
 				case "scroll up":
 					console.log("scroll up case");
 					window.scrollBy(0,-500);
-					  break;
+					sp.text="Scrolled up";
+					window.speechSynthesis.speak(sp);					  
+						break;
 				case "scroll down":
 					  console.log("scroll down case");
 					  window.scrollBy(0,500);
+					  sp.text="Scrolled down";
+					  window.speechSynthesis.speak(sp);
 						break;
 				case "screenshot":
 					//add your working code for screenshot
@@ -36,17 +47,48 @@ document.addEventListener("keypress", function(){
 				case "zoom in":
 					zoom=zoom+0.1;
 					document.body.style.zoom=zoom;
-					
+					sp.text="Zoomed in";
+					window.speechSynthesis.speak(sp);
 					break;
 				
 				case "zoom out":
 					zoom=zoom-0.1;
 					document.body.style.zoom=zoom;
-					
+					sp.text="Zoomed out ";
+					window.speechSynthesis.speak(sp);
 					break;
 				
+				case "head":
+					console.log("read head");
+					var a=document.querySelector("p");					
+					console.log(a);
+					var i;				
+					/*for(i=0;i<a.length;i++)
+					{
+					var b=a.item(i).innerHTML;
+					console.log(b);
+					sp.text=b;
+					window.speechSynthesis.speak(sp);
+					}*/					
+					sp.text=a.innerHTML;
+					window.speechSynthesis.speak(sp);						
+					break;
+
+				case "back":
+					console.log("back");
+					history.go(-1);
+					sp.text="Redirected back";
+					break;	
+				
+				case "read selected":
+					sp.text=getSelectedText();
+					window.speechSynthesis.speak(sp);
+					break;
+					
+
 				default:
 					var size=document.links.length;
+					
 					console.log(key.toString().toLowerCase());
 					//iterated for links and redirected to result
 					for(var i=0;i<size;i++)
@@ -56,10 +98,15 @@ document.addEventListener("keypress", function(){
 						if(key.toString().toLowerCase()===document.links[i].text.toString().toLowerCase())
 						{
 											
-							window.open(document.links[i]);	
+							window.open(document.links[i],"_self");	
+							sp.text="Redirected to "+key;
+							window.speechSynthesis.speak(sp);	
 							break;			
 						}
+						
+						
 					}
+
 					
 					
 				  
@@ -70,4 +117,38 @@ document.addEventListener("keypress", function(){
 
 
 	}
+	
 });
+
+
+
+//functions required
+function speak(s)
+{
+	console.log(s);
+	t="Redirected to "+s;
+	textToSpeech();
+	function textToSpeech() 
+	{
+		var utter = new SpeechSynthesisUtterance();
+		utter.rate = 1;
+		utter.pitch = 0.5;
+		utter.text = t;
+		utter.onend = function() {
+		}
+		window.speechSynthesis.speak(utter);
+	}
+	
+}
+function getSelectedText() 
+{
+    var text = "";
+	if (window.getSelection) 
+	{
+        text = window.getSelection().toString();
+	} else if (document.selection && document.selection.type != "Control") 
+	{
+        text = document.selection.createRange().text;
+    }
+    return text;
+}
