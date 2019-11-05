@@ -93,7 +93,7 @@ document.addEventListener("keypress", function()
 				for(var i=0;i<size;i++)
 				{
 
-					//console.log(document.links[i].text+"   "+document.links[i]);
+					console.log(document.links[i].text+"   "+document.links[i]);
 					if(key.toString().toLowerCase()===document.links[i].text.toString().toLowerCase())
 					{
 										
@@ -146,15 +146,5 @@ function getSelectedText()
     }
     return text;
 }
-
-
-
-
-
-
-
-
-
-
 
 
