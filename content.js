@@ -1,24 +1,28 @@
 var key;
 var zoom=1;
-document.addEventListener("keypress", function()
-{
-	if (event.keyCode == 13) 
+//document.addEventListener("keypress", function()
+//{
+	//if (event.keyCode == 13)
+	//{
+	//while(true)
+	//myfun();
+	//function myfun()
 	{
 		console.log("u hit enter");
-		g="Command please";
+		//g="Command please";
 		var sp = new SpeechSynthesisUtterance();
 		sp.rate = 1;
 		sp.pitch = 0.5;
-		sp.text = g;
+		//sp.text = g;
 		console.log("you hit enter");
-		window.speechSynthesis.speak(sp);
+		//window.speechSynthesis.speak(sp);
 		var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
 		recognition.lang = 'en-US';
 		recognition.interimResults = false;
 		recognition.maxAlternatives = 5;
 		recognition.start();
 
-		recognition.onresult = function(event) 
+		recognition.onresult = function(event)
 		{
 			//inputted text is captured in key variable
 			key=event.results[0][0].transcript;
@@ -28,20 +32,20 @@ document.addEventListener("keypress", function()
 				console.log("scroll up case");
 				window.scrollBy(0,-500);
 				sp.text="Scrolled up";
-				window.speechSynthesis.speak(sp);	
+				window.speechSynthesis.speak(sp);
 			}
 			else if(key.includes("scroll down"))
 			{
 				console.log("scroll down case");
 				window.scrollBy(0,500);
 				sp.text="Scrolled down";
-				window.speechSynthesis.speak(sp);	
+				window.speechSynthesis.speak(sp);
 			}
 			else if(key.includes("screenshot"))
 			{
 				//
 			}
-			else if(key.includes("zoom in"))
+			else if(key.includes("zoom") && key.includes("in"))
 			{
 				zoom=zoom+0.1;
 				document.body.style.zoom=zoom;
@@ -65,16 +69,17 @@ document.addEventListener("keypress", function()
 			else if(key.includes("head"))
 			{
 				console.log("read head");
-				var a=document.querySelectorAll("p");					
+				var a=document.querySelectorAll("p");
 				console.log(a);
-				var i;				
+				var i;
 				for(i=0;i<a.length;i++)
 				{
 					var b=a[i].innerText;
 					console.log(b);
 					sp.text=b;
 					window.speechSynthesis.speak(sp);
-				}/*			
+					sp="";
+				}/*
 				sp.text=a.innerHTML;
 				window.speechSynthesis.speak(sp);*/
 			}
@@ -83,9 +88,42 @@ document.addEventListener("keypress", function()
 				sp.text=getSelectedText();
 				window.speechSynthesis.speak(sp);
 			}
+			else if(key.includes("go to") || key.includes("open "))
+			{
+				key=key.replace("go to","");
+				key=key.replace("open ","");
+				window.open(key);
+			}
+			else if(key.includes("new "))
+			{
+				console.log("hii")
+				key=key.replace("new ","");
+				console.log(key);
+				var size=document.links.length;
+
+				//console.log(key.toString().toLowerCase());
+				//iterated for links and redirected to result
+				for(var i=0;i<size;i++)
+				{
+
+					//console.log(document.links[i].text+"   "+document.links[i]);
+					if(key.toString().toLowerCase()===document.links[i].text.toString().toLowerCase())
+					{
+
+						window.open(document.links[i]);
+						sp.text="Redirected to "+key;
+						window.speechSynthesis.speak(sp);
+						break;
+					}
+
+
+				}
+				recognition.onend=function(){}
+			}
 			else
 			{
-				
+
+
 				var size=document.links.length;
 
 				console.log(key.toString().toLowerCase());
@@ -93,28 +131,31 @@ document.addEventListener("keypress", function()
 				for(var i=0;i<size;i++)
 				{
 
-					console.log(document.links[i].text+"   "+document.links[i]);
+				//	console.log(document.links[i].text+"   "+document.links[i]);
 					if(key.toString().toLowerCase()===document.links[i].text.toString().toLowerCase())
 					{
-										
-						window.open(document.links[i],"_self");	
+
+						window.open(document.links[i],"_self");
 						sp.text="Redirected to "+key;
-						window.speechSynthesis.speak(sp);	
-						break;			
+						window.speechSynthesis.speak(sp);
+						break;
 					}
-					
-					
+
+
 				}
 			}
 
 		};
-
-
+		recognition.onend=function(){
+		recognition.start();
+		}
 	}
-	
-});
 
+	//}
 
+//});
+
+//setInterval(myfun,3000);
 
 //functions required
 function speak(s)
@@ -122,7 +163,7 @@ function speak(s)
 	console.log(s);
 	t="Redirected to "+s;
 	textToSpeech();
-	function textToSpeech() 
+	function textToSpeech()
 	{
 		var utter = new SpeechSynthesisUtterance();
 		utter.rate = 1;
@@ -132,19 +173,17 @@ function speak(s)
 		}
 		window.speechSynthesis.speak(utter);
 	}
-	
+
 }
-function getSelectedText() 
+function getSelectedText()
 {
     var text = "";
-	if (window.getSelection) 
+	if (window.getSelection)
 	{
         text = window.getSelection().toString();
-	} else if (document.selection && document.selection.type != "Control") 
+	} else if (document.selection && document.selection.type != "Control")
 	{
         text = document.selection.createRange().text;
     }
     return text;
 }
-
-
