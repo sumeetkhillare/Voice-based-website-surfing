@@ -92,7 +92,7 @@ var zoom=1;
 			{
 				key=key.replace("go to","");
 				key=key.replace("open ","");
-				window.open(key);
+				window.open("https://"+key,"_self");
 			}
 			else if(key.includes("new "))
 			{
