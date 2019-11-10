@@ -1,3 +1,19 @@
+var v = document.createElement('video');
+v.id = "videoInput";
+
+//v.width+=400;
+document.body.appendChild(v);
+//console.log(document.getElementsById("v"));
+let video = document.getElementById("videoInput"); // video is the id of video tag
+navigator.mediaDevices.getUserMedia({ video: true, audio: false	 })
+	.then(function(stream) {
+			video.srcObject = stream;
+			video.play();
+	})
+	.catch(function(err) {
+			console.log("An error occurred! " + err);
+	});
+
 var key;
 var zoom=1;
 //document.addEventListener("keypress", function()
@@ -8,7 +24,7 @@ var zoom=1;
 	//myfun();
 	//function myfun()
 	{
-		console.log("u hit enter");
+	//	console.log("u hit enter");
 		//g="Command please";
 		var sp = new SpeechSynthesisUtterance();
 		sp.rate = 1;
@@ -88,11 +104,8 @@ var zoom=1;
 				sp.text=getSelectedText();
 				window.speechSynthesis.speak(sp);
 			}
-			else if(key.includes("go to") || key.includes("open "))
-			{
-				key=key.replace("go to","");
-				key=key.replace("open ","");
-				window.open("https://"+key,"_self");
+			else if(key.includes("bottom")){
+				window.scrollTo(0,document.body.scrollHeight);
 			}
 			else if(key.includes("new "))
 			{
@@ -146,10 +159,10 @@ var zoom=1;
 			}
 
 		};
-		recognition.onend=function(){
-		recognition.start();
-		}
-	}
+recognition.onend=function(){
+	recognition.start();
+}
+}
 
 	//}
 
